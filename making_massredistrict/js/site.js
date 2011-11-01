@@ -26,6 +26,15 @@ $(window).load(function() {
           }
       );
   });
+  $('textarea.css-snippet').each(function(a, b, elem) {
+      CodeMirror.fromTextArea(a, {
+              readOnly: 'nocursor',
+              mode: {name:'css'},
+              lineNumbers: true,
+              value: elem.text()
+          }
+      );
+  });
   $('textarea.html-snippet').each(function(a, b, elem) {
       CodeMirror.fromTextArea(a, {
               readOnly: 'nocursor',
