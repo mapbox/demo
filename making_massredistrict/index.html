@@ -262,6 +262,16 @@ cp massredistrict.zip ~/Documents/MapBox/data/
         you'll need to install your own tileserver on a webhost.</p>
         <p>So, on the right is the map that I uploaded, with interactivity,
         served up by MapBox.</p>
+        <p>How to do this is kind of weird, right now. Let's say you
+        <a href='http://tiles.mapbox.com/upload/create/'>upload a map for free with MapBox</a>:
+        What you need to do is to right-click somewhere on the uploaded map, and
+        click 'Copy Image URL'. Then you've got a url like</p>
+        <pre>http://d.tiles.mapbox.com/v2/mapbox.world-bright,upload.alfw8a7c/6/19/23.png</pre>
+        <p>You'll need to change this to get the tilejson URL. delete the three numbers, and the .png,
+        and replace them with a <code>.jsonp</code>
+        <pre>http://d.tiles.mapbox.com/v2/mapbox.world-bright,upload.alfw8a7c.jsonp</pre>
+        <p>And bam, you've got your jsonp url - it should <a href='http://a.tiles.mapbox.com/v2/tmcw.census-redistricting-massachusetts.jsonp'>look like this.</a></p>
+
       </div>
       <div class='right'>
         <iframe width='600' height='300' frameBorder='0' src='http://a.tiles.mapbox.com/v2/tmcw.census-redistricting-massachusetts/mm/zoompan,tooltips,legend,share,zoomwheel,zoombox,attribution.html#8/42.21932536019242/-71.76132265625'></iframe>
@@ -390,8 +400,12 @@ window.onload = function() {
    <div class='section clearfix'>
       <h2 id='12'>Step Twelve: What Did I Just Do?</h2>
       <div class='left'>
-        Open up <code>index.html</code>, and if you've done everything
-        perfectly, it'll be a glorious map-page.
+        <p>Open up <code>index.html</code>, and if you've done everything
+        perfectly, it'll be a glorious map-page.</p>
+        <p>You're <a href='https://github.com/mapbox/tilejson'>using a thing called
+          TileJSON</a>. This actually downloads a JSON file that describes
+        your map, and then Wax's <code>wax.mm.connector</code> knows how to turn
+        this into map configuration.</p>
       </div>
       <div class='right'>
         <textarea class='js-snippet'>

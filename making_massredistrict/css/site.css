@@ -110,3 +110,7 @@ html[xmlns] .clearfix {
 * html .clearfix {
 	height: 1%;
 }
+
+pre {
+  font:12px/15px monospace;
+}
