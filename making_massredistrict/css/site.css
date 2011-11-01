@@ -71,6 +71,25 @@ em {
   font-style: italic;
 }
 
+#floater {
+  position:fixed;
+  bottom:0;
+  right:0;
+}
+
+#floater #open-chat {
+  font-size:30px;
+  line-height:50px;
+  background:#d82b56;
+  color:#fff;
+  padding:10px;
+}
+
+#floater iframe {
+  display:none;
+}
+
+
 .clearfix:after {
 	content: ".";
 	display: block;

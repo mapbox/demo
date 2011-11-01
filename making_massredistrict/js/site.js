@@ -35,4 +35,8 @@ $(window).load(function() {
           }
       );
   });
+  $('#open-chat').click(
+    function() {
+      $('#chat').toggle();
+  });
 });
