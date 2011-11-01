@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MapBox: Making a Massachusetts Redistricting Website</title>
+    <link href='css/reset.css' type='text/css' rel='stylesheet' />
+    <link href='css/site.css' type='text/css' rel='stylesheet' />
+    <link href='css/codemirror.css' type='text/css' rel='stylesheet' />
+    <link href='css/code.css' type='text/css' rel='stylesheet' />
+    <script src='js/reference.json' type='text/javascript'></script>
+    <script src='js/ender.js' type='text/javascript'></script>
+    <script src='js/codemirror.js' type='text/javascript'></script>
+    <script src='js/javascript.js' type='text/javascript'></script>
+    <script src='js/python.js' type='text/javascript'></script>
+    <script src='js/codemirror.carto.js' type='text/javascript'></script>
+    <script src='js/css.js' type='text/javascript'></script>
+    <script src='js/xml.js' type='text/javascript'></script>
+    <script src='js/htmlmixed.js' type='text/javascript'></script>
+    <script src='js/site.js' type='text/javascript'></script>
+  </head>
+  <body>
+    <div id='header'>
+      <h1>Making a Massachusetts Redistricting Website from Scratch Quickly</h1>
+      <p>using some <a href='http://mapbox.com/'>MapBox</a> open source
+      tools, elbow grease, and colors.</p>
+    </div>
+    <p>Here's a tutorial for making
+    <a href='http://macwright.org/demo/massredistrict/'>this website</a>, from
+    scratch (from imperfect data), pretty quickly. When you're done, you'll
+    have a website that you can actually use and can actually
+    <strong>deploy</strong>.</p>
+    <p>There is a minimum of sugar-coating, and you'll be expected to
+    use a terminal at some point, and a Mac or Linux computer to run
+    TileMill. Making maps is technical, but not terribly hard, because
+    it's often the same steps repeated over and over again. After
+    you've followed this, you should be capable of making maps
+    and map-including websites willy-nilly.
+    </p>
+    <p>Though you may be able to get through this on Windows
+    <em>by using VirtualBox</em>, it's much, much better to use
+    Mac or Linux.</p>
+
+    <div class='section clearfix'>
+      <h2 id='1'>Step One: Setup</h2>
+      <div class='left'>
+      <p>You'll want to have a good text editor installed. On Macs,
+      TextMate, Sublime Text, Coda, TextWrangler, and others are
+      all great.</p>
+      <p>Then, make a folder that'll contain your project.
+      <code>massredistrict</code> would be appropriate. <em>Don't use
+      spaces in the names of any folders or files of anything that you
+      do that will be on the internet.</em></p>
+    </div>
+    <div class='section clearfix'>
+      <h2 id='2'>Step One: Data</h2>
+      <div class='left'>
+      <p>This step isn't really mapping related: if you have great data,
+      skip it. But, in the interest of clarity, here we go.</p>
+      <p>So, the first thing that you get is data. It's usually imperfect,
+      and it isn't in this case. Below is the link to the file, called
+      <code>vd.geojson</code> for some odd reason. Anyway, you have it,
+      and if you peek inside, you'll see what it has: data and polygons.</p>
+      <p>Right click &amp; save, and download it to your folder: <a class='download' href='assets/vd.geojson'>vd.geojson</a>
+      </p>
+      <p><a href='http://geojson.org/'>It's GeoJSON</a>: a really nice and
+      simple format - not the most efficient, but friendly to work with.</p>
+      </div>
+      <div class='right'>
+        <textarea class='js-snippet'>
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-71.339004000000003, 41.808548999999999],
+          [-71.338531000000003, 41.808672999999999],
+          [-71.338005999999993, 41.808843000000003],
+          [-71.336907999999994, 41.809297999999998],
+          [-71.336741000000004, 41.809365999999997],
+        </textarea>
+      </div>
+    </div>
+
+
+   <div class='section clearfix'>
+      <h2 id='3'>Step Three: Data Cleaning &amp; Fixing</h2>
+      <div class='left'>
+        <p>What do you want to do with this data? At least in this
+        case, we want to make a <a href='http://en.wikipedia.org/wiki/Choropleth_map'>choropleth map</a>
+        to show the demographic breakdown of redistricting Massachusetts
+        visually.</p>
+        <p>In order to do this, we need <em>numbers</em>! So check that
+        we have them: we don't, or at least not in a nice format.</p>
+        <p>Instead of having something like <code>"white": "0.5"</code>, we have
+        an HTML table embedded in GeoJSON! No good. So, you can either
+        do this manually, or learn how to script it.</p>
+        <p>Here's a script that works to turn the data into something usable:
+        you can copy &amp; paste it as a script called <code>doit.py</code>,
+        and then you can run <code>python doit.py</code> in the same folder
+        as your data (<code>vd.geojson</code>).</p>
+        <p>If you're interested in learning Python, check out <a href='http://learnpythonthehardway.org/book/'>Learn Python the Hard Way</a>,
+        a free book on the internet. It's not necessary, but picking up a
+        scripting language - whether Python, Ruby, Perl, or something else -
+        will make you faster and more efficient with data than you've
+        ever been before.</p>
+      </div>
+      <div class='right'>
+        <textarea class='python-snippet'>
+# save this script as doit.py
+import json, re
+
+f = json.load(open('vd.geojson', 'r'))
+
+for feat in range(len(f['features'])):
+    html = f['features'][feat]['properties']['Description']
+    m = re.findall('td>(\d+)', html)
+    pop = float(m[0])
+    if pop > 0:
+        f['features'][feat]['properties']['white'] = float(m[1]) / pop
+        f['features'][feat]['properties']['black'] = float(m[2]) / pop
+        f['features'][feat]['properties']['asian'] = float(m[3]) / pop
+        f['features'][feat]['properties']['hispanic'] = float(m[4]) / pop
+
+json.dump(f, open('newout.geojson', 'w'))
+        </textarea>
+      </div>
+    </div>
+
+    <div class='section clearfix'>
+      <h2 id='4'>Step Four: Faster Data</h2>
+      <div class='left'>
+        <p>Now you've got data. Or if you didn't want to learn
+        Python and still kept reading, you're in luck: here's
+        <a class='download' href='asssets/newout.geojson'>newout.geojson</a>, the
+        result of that command.</p>
+        <p>Unfortunately, this data is slow! GeoJSON is just
+        text, and so the file's big - let's convert it to a
+        <a href='http://en.wikipedia.org/wiki/Shapefile'>shapefile</a>
+        with <code>ogr2ogr</code>. If you don't have OGR installed yet,
+        <a href='http://www.kyngchaos.com/software/frameworks'>download
+          and install the GDAL complete framework</a> from kyngchaos.</p>
+        <p>Then you can run the commands on the right to convert
+        <code>newout.geojson</code> into <code>newnew.shp</code>,
+        make a zip file, and move it to the TileMill data folder</p>
+      </div>
+      <div class='right'>
+        <textarea class='python-snippet'>
+ogr2ogr newnew.shp newout.geojson
+zip massredistrict.zip newnew.*
+cp massredistrict.zip ~/Documents/MapBox/data/
+        </textarea>
+      </div>
+    </div>
+
+    <div class='section clearfix'>
+      <h2 id='5'>Step Five: Making a Map</h2>
+      <div class='left'>
+        <p>Now it's time to make a map. Since I'm making a choropleth
+        map and want to be pretty - but don't have a great grasp on color
+        choice, I used <a href='http://colorbrewer2.org/'>colorbrewer</a>
+        colors: color choices by the masterful <a href='http://www.personal.psu.edu/cab38/'>Cynthia Brewer</a></p>
+        <p>I had previously ported colorbrewer colors to Carto,
+        the stylesheet language of <a href='http://mapbox.com/tilemill'>TileMill</a>, so I could start with those instead of copying them by hand.
+        <a class='download' href='https://github.com/mapbox/colorbrewer-carto'>You should too: here's colorbrewer-carto.</a>.</p>
+        <p>So, on the left are some of the colorbrewer colors you'll
+        be using.</p>
+
+      </div>
+      <div class='right'>
+        <textarea class='carto-snippet'>
+@Blues-q0-9: rgb(247,251,255);
+@Blues-q1-9: rgb(222,235,247);
+@Blues-q2-9: rgb(198,219,239);
+@Blues-q3-9: rgb(158,202,225);
+@Blues-q4-9: rgb(107,174,214);
+@Blues-q5-9: rgb(66,146,198);
+@Blues-q6-9: rgb(33,113,181);
+@Blues-q7-9: rgb(8,81,156);
+@Blues-q8-9: rgb(8,48,107);
+        </textarea>
+      </div>
+    </div>
+
+   <div class='section clearfix'>
+      <h2 id='6'>Step Six: Making some Styles</h2>
+      <div class='left'>
+        <p><a href='http://mapbox.com/tilemill'>Install TileMill</a> if you haven't
+        yet. Make a TileMill project, and call it something like
+        'massredistrict'.</p>
+        <p>Add a layer: if you go to the add layers dialog,
+        <code>massredistrict.zip</code> will now be available.
+        Give it the id <code>redistricting</code>.</p>
+        <p>On the right is the complete style for the redistricting
+        map: it's not all that scary. The base style defines that
+        we'll want semi-opaque polygons with borders, and a base
+        fill of <code>#fff</code>. The other rules set 'breaks'
+        for different demographics levels.</p>
+      </div>
+      <div class='right'>
+        <textarea class='carto-snippet'>
+#redistricting {
+  polygon-opacity:0.6;
+  line-color:#fff;
+  polygon-fill:#fff;
+  }
+
+#redistricting[white > 0.4] {
+  polygon-fill:@Blues-q1-9;
+  }
+#redistricting[white > 0.7] {
+  polygon-fill:@Blues-q3-9;
+  }
+#redistricting[white > 0.8] {
+  polygon-fill:@Blues-q6-9;
+  }
+#redistricting[white > 0.9] {
+  polygon-fill:@Blues-q8-9;
+  }
+
+#redistricting[zoom > 8] {
+  line-width:0.7;
+  }
+
+#redistricting[zoom > 10] {
+  line-width:0.9;
+  }
+        </textarea>
+      </div>
+    </div>
+
+   <div class='section clearfix'>
+      <h2 id='7'>Step Seven: Defining Interactivity</h2>
+      <div class='left'>
+        <p>For the interactivity setup, <a href='http://mapbox.com/tilemill/docs/tutorials/google-charts/'>I just followed our
+          existing tutorial.</a> The resulting
+        interactivity template is on the right.</p>
+        <p>It gives you popups with pie charts like
+        <img src='http://chart.googleapis.com/chart?cht=p&chd=t:0.01352493660186,0.94392786700479,0.020850943927867,0.016060862214708&chs=200x100&chl=Black|White|Hispanic|Asian' /></p>
+      </div>
+      <div class='right'>
+        <textarea class='html-snippet'>
+<h1>Demographics</h1>
+
+<img
+  src='http://chart.googleapis.com/chart?cht=p&chd=t:[black],[white],[hispanic],[asian]&chs=200x100&chl=Black|White|Hispanic|Asian' />
+        </textarea>
+      </div>
+    </div>
+
+
+   <div class='section clearfix'>
+      <h2 id='8'>Step Eight: Doing an Export &amp; Uploading</h2>
+      <div class='left'>
+        <p>This should be simple enough: click Export, and then MBTiles in
+        TileMill. Select Massachusetts and zoom levels 4-12.</p>
+        <p>When the export finishes, you'll have an <a href='http://mapbox.com/mbtiles-spec'>MBTiles</a> file
+        that you can put on the web.</p>
+        <p>I used <a href='http://mapbox.com/hosting'>MapBox Hosting</a>,
+        and if you don't have an account, you can upload a tileset
+        for free to try it out. If you don't want to go that route,
+        you'll need to install your own tileserver on a webhost.</p>
+        <p>So, on the right is the map that I uploaded, with interactivity,
+        served up by MapBox.</p>
+      </div>
+      <div class='right'>
+        <iframe width='600' height='300' frameBorder='0' src='http://a.tiles.mapbox.com/v2/tmcw.census-redistricting-massachusetts/mm/zoompan,tooltips,legend,share,zoomwheel,zoombox,attribution.html#8/42.21932536019242/-71.76132265625'></iframe>
+      </div>
+    </div>
+
+   <div class='section clearfix'>
+      <h2 id='9'>Step Nine: Setting up a website</h2>
+      <div class='left'>
+        <p>Let's get your ingredients together. If you're on a mac,
+        anything that you drop into the <code>Sites</code>
+        folder will be accessible locally: so make a folder in
+        <code>Sites/massredistrict</code>, and then fill it
+        with wonderful things. On the right is a directory structure
+        you should aim for.
+        </p>
+        <p>We'll use <a href='http://github.com/stamen/modestmaps-js'>Modest Maps</a> and
+        <a href='http://mapbox.com/wax'>Wax</a> for this site: there's
+        no need to use jQuery unless you don't need it.
+        </p>
+        <p>And we'll use <a href='http://meyerweb.com/eric/tools/css/reset/'>a CSS reset</a> to make sure that styles are consistent across browsers.</p>
+        <p>So download the latest tag of <a href='https://github.com/stamen/modestmaps-js/tags'>Modest Maps</a> and unzip, and copy <code>modestmaps.min.js</code>
+        to <code>js</code>. Then download <a href='https://github.com/mapbox/wax/tags'>the latest tag of Wax</a> and copy <code>wax.mm.min.js</code> (from <code>dist</code>) to <code>js</code>.
+        <p><em>index.html, site.css, and site.js</em> are the files that
+        you'll start from scratch and which will make this site
+        your own.</p>
+      </div>
+      <div class='right'>
+        <textarea class='python-snippet'>
+Sites/
+  massredistrict/
+    index.html
+    js/
+      wax.mm.min.js
+      modestmaps.min.js
+      site.js
+    css/
+      reset.css
+      site.css
+        </textarea>
+      </div>
+
+<script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4e970faef5a1f51def000002');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,93 @@
+body {
+  font: 14px/20px 'Helvetica Neue', sans-serif;
+  max-width:960px;
+  margin:0 auto;
+  color:#222;
+}
+
+a {
+  color:#d82b56;
+}
+
+#header {
+  background:#333;
+  color:#eee;
+}
+
+#header h1 {
+  font: bold 20px/30px 'Helvetica Neue', serif;
+  padding:5px 10px;
+  margin:0;
+}
+
+#header p {
+  padding:5px 10px;
+  color:#eee;
+}
+
+#header p a {
+  color:#eee;
+}
+
+h2 {
+  font: bold 20px/30px 'Helvetica Neue', serif;
+  padding:10px;
+  background:#FFEEE6;
+  margin:5px 0;
+}
+
+code {
+  background:#e2d9d4;
+  padding:2px;
+}
+
+div.section {
+  margin:10px 0;
+}
+
+p {
+  padding:10px 0;
+}
+
+a.download {
+  background:#d82b56;
+  color:#fff;
+  padding:3px;
+}
+
+div.left {
+  width:320px;
+  margin-right:20px;
+  float:left;
+}
+
+div.right {
+  width:620px;
+  float:right;
+}
+
+
+em {
+  font-style: italic;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
