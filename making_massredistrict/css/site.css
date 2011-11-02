@@ -114,3 +114,11 @@ html[xmlns] .clearfix {
 pre {
   font:12px/15px monospace;
 }
+
+ul {
+  padding-left:20px;
+}
+
+ul li {
+  padding:5px 0;
+}

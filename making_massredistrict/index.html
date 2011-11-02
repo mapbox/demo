@@ -498,6 +498,27 @@ body#mass div.wax-tooltip a {
   </div>
 </div>
 
+    <div class='section clearfix'>
+      <h2 id='14'>Step Fourteen: Touch Support</h2>
+        <p>There are plenty of ways to handle touch support.
+        Generally we don't use all-in-one tools like <a href='http://jquerymobile.com/'>jQuery Mobile</a>
+        because they force you into a website structure and UI paradigm,
+        and are often designed more for phones than for tablets.
+        </p>
+        <p>
+        Following a few key rules will help you build sites with
+        touch in mind:
+        </p>
+        <ul>
+          <li>If there's a large map, it should touch the corners of the
+          page. This way, pinching the map is less likely to resize the page.
+          <li>Ideally, you can restrict the scale of the page with a
+          tag like <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0&quot; /&gt;</code>.
+          This says that you can't pinch the page to zoom in - so all
+          images that you define stay sharp, and you need to design for
+          text scales that work.
+        </ul>
+   </div>
 
 <div id='floater'>
   <a href='#' id='open-chat'>open chat</a>
