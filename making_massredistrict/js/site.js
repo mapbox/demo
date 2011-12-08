@@ -44,8 +44,9 @@ $(window).load(function() {
           }
       );
   });
-  $('#open-chat').click(
+  $toc = $('#toc');
+  $('h2').each(
     function() {
-      $('#chat').toggle();
+      $('<li></li>').append($('<a></a>').text($(this).text()).attr('href', '#' + $(this).attr('id'))).appendTo($toc);
   });
 });
