@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="leaflet.ie.css" /><![endif]-->
+
+    <script src="leaflet.js"></script>
+    <script src="wax.leaf.min.js"></script>
+
+    <script src="museums.js"></script>
+  </head>
+  <body>
+    <div id="mapbox" style="width: 800px; height: 400px"></div>
+    <script type="text/javascript">
+
+      // Create a geojson data layer
+      var geojsonLayer = new L.GeoJSON();
+
+      // Get metadata about the map from MapBox
+      wax.tilejson('http://api.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp',
+          function(tilejson) {
+            
+            // Make a new Leaflet map in your container div
+            var map = new L.Map('mapbox')  // container's id="mapbox"
+              
+            // Center the map on Washington, DC, at zoom 14
+            .setView(new L.LatLng(38.9, -77.035), 15)
+
+            // Add MapBox Streets as a base layer
+            .addLayer(new wax.leaf.connector(tilejson))
+            
+            // Add the geojson layer
+            .addLayer(geojsonLayer);
+            
+            // Display the name property on click
+            geojsonLayer.on("featureparse", function (e) {
+                if (e.properties && e.properties.name){
+                    e.layer.bindPopup(e.properties.name);
+                }
+            });
+            
+            // Populate our geojson layer with data from our external file
+            geojsonLayer.addGeoJSON(data);
+            
+      });
+    </script>
+  </body>
+</html>
