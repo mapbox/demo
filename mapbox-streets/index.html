@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Museums in Washington, DC</title>
     <link rel="stylesheet" href="leaflet.css" />
     <!--[if lte IE 8]><link rel="stylesheet" href="leaflet.ie.css" /><![endif]-->
 
@@ -11,37 +12,54 @@
   <body>
     <div id="mapbox" style="width: 800px; height: 400px"></div>
     <script type="text/javascript">
+    
+    // Define a custom icon using the Maki museum icon
+    var museumIcon = L.Icon.extend({
+        iconUrl: 'museum-24.png',
+        shadowUrl: null,
+        iconSize: new L.Point(24, 24),
+        shadowSize: null,
+        iconAnchor: new L.Point(12, 24),
+        popupAnchor: new L.Point(0,-24)
+    });
 
-      // Create a geojson data layer
-      var geojsonLayer = new L.GeoJSON();
+    // Define a geojson data layer
+    var geojsonLayer = new L.GeoJSON(data, {
+      pointToLayer: function (latlng) {
+        return new L.Marker(latlng, {
+          icon: new museumIcon()
+        });
+      }      
+    });
 
-      // Get metadata about the map from MapBox
-      wax.tilejson('http://api.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp',
-          function(tilejson) {
-            
-            // Make a new Leaflet map in your container div
-            var map = new L.Map('mapbox')  // container's id="mapbox"
-              
-            // Center the map on Washington, DC, at zoom 14
-            .setView(new L.LatLng(38.9, -77.035), 15)
+    // Define the map to use from MapBox
+    var url = 'http://api.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp';
 
-            // Add MapBox Streets as a base layer
-            .addLayer(new wax.leaf.connector(tilejson))
-            
-            // Add the geojson layer
-            .addLayer(geojsonLayer);
-            
-            // Display the name property on click
-            geojsonLayer.on("featureparse", function (e) {
-                if (e.properties && e.properties.name){
-                    e.layer.bindPopup(e.properties.name);
-                }
-            });
-            
-            // Populate our geojson layer with data from our external file
-            geojsonLayer.addGeoJSON(data);
-            
-      });
+    // Get metadata about the map from MapBox
+    wax.tilejson(url,function(tilejson) {
+          
+        // Make a new Leaflet map in your container div
+        var map = new L.Map('mapbox')  // container's id="mapbox"
+          
+        // Center the map on Washington, DC, at zoom 14
+        .setView(new L.LatLng(38.9, -77.035), 15)
+
+        // Add MapBox Streets as a base layer
+        .addLayer(new wax.leaf.connector(tilejson))
+        
+        // Add the geojson layer
+        .addLayer(geojsonLayer);
+        
+        // Display the name property on click
+        geojsonLayer.on("featureparse", function (e) {
+            if (e.properties && e.properties.name){
+                e.layer.bindPopup(e.properties.name);
+            }
+        });
+        
+        // Populate our geojson layer with data
+        geojsonLayer.addGeoJSON(data);
+    });
     </script>
   </body>
 </html>
