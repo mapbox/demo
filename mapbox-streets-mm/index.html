@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Museums in Washington, DC</title>
+
+    <link rel="stylesheet" href="mmg.css"/>
+
+    <script src="modestmaps.min.js"></script>
+    <script src="wax.mm.min.js"></script>
+    <script src="mmg.js"></script>
+    <script src="mmg_interaction.js"> </script>
+    <script src="simplestyle_factory.js"> </script>
+  </head>
+  <body>
+    <div id="mapbox" style="width: 800px; height: 400px"></div>
+    <script type="text/javascript">
+
+      // Define the map to use from MapBox
+      // This is the TileJSON endpoint copied from the embed button on your map
+      // In this example we are using MapBox streets
+      // http://api.tiles.mapbox.com/v3/mapbox.mapbox-streets.jsonp
+      var url = 'mapbox.mapbox-streets-dc.jsonp';
+
+      // Get metadata about the map from MapBox
+      wax.tilejson(url, function(tilejson) {
+
+        // Make a new ModestMaps map in your container div
+        var map = new MM.Map('mapbox', new wax.mm.connector(tilejson));
+
+        // Center the map using tilejson metadata
+        map.setCenterZoom(new MM.Location(
+            tilejson.center[1], // latitude
+            tilejson.center[0]), // longitude
+          tilejson.center[2]); // zoom level
+
+
+        // Define a GeoJSON data layer
+        var markerLayer = mmg().factory(simplestyle_factory)
+          // URL of our GeoJSON
+          .url('museums.geojson', function(f, l) {
+            mmg_interaction(l);
+          });
+
+        // Add the marker layer to the map
+        map.addLayer(markerLayer);
+      });
+    </script>
+  </body>
+</html>
