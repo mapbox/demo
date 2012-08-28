@@ -1,0 +1,35 @@
+<html
+  <head>
+    <script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.4/mapbox.js'></script>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v0.6.4/mapbox.css' rel='stylesheet' />
+    <link href='style.css' rel='stylesheet' />
+    <!--
+      note this is a hacked up version of easey, adding support for rotations and scales
+    -->
+    <script src="easey.js"></script>
+    <script src="http://d3js.org/d3.v2.js"></script>
+    <script src="run.json"></script>
+  </head>
+  <body>
+    <div class='page'>
+        <h1>Run Replay</h1>
+        <div id="container">
+          <div id="skw">
+            <div id="rot" class='start'>
+            </div>
+          </div>
+          <div id="center">
+            <div id="person-marker"></div>
+          </div>
+        </div>
+        <div id="stats">
+          <div id="speed"></div>
+          <div id="heartbeat"></div>
+          <div id="alt" class="ln">
+            <div id="altext"></div>
+          </div>
+        </div>
+    </div>
+    <script src="site.js"></script>
+  </body>
+</html>

@@ -1,0 +1,129 @@
+body {
+  font-family: "Helvetica Neue";
+  background:#eeeeee;
+  width:840px;
+  color:#333;
+  margin:10px auto;
+}
+
+h1 {
+    margin:0 0 20px 0;
+    font-weight:600px;
+    font-size:24px;
+    font-weight:300;
+}
+
+.page {
+    padding:20px;
+    border:1px solid #ddd;
+    background:#fff;
+}
+
+#container {
+  width: 800px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+}
+
+#rot {
+  background:url(icon.png);
+  background-position:50% 50%;
+  background-repeat: no-repeat;
+  width: 1200px;
+  height: 900px;
+  position: absolute;
+  top: -250px;
+  left: -200px;
+}
+
+#rot.start {
+  cursor:hand;
+  }
+#rot.start img {
+  opacity:0.2;
+  }
+
+#center {
+  display: none;
+  position: absolute;
+  left: 380px;
+  top: 150px;
+  width: 40px;
+  height: 60px;
+}
+
+.ln  {
+  -webkit-transition: width 0.15s linear;
+}
+
+#person-marker {
+  z-index:999;
+  width:40px;
+  height:60px;
+  background-image:url(http://stateofthemap.us/img/walk-cycle.png);
+}
+
+.dir-left  { background-position-x: 110px; }
+.dir-right { background-position-x: 40px; }
+.dir-up    { background-position-x: -70px; }
+
+
+.frame-0 { background-position-y: -60px; }
+.frame-1 { background-position-y: -120px; }
+.frame-2 { background-position-y: -180px; }
+.frame-3 { background-position-y: -240px; }
+.frame-4 { background-position-y: -300px; }
+.frame-5 { background-position-y: -360px; }
+.frame-6 { background-position-y: -420px; }
+.frame-7 { background-position-y: -480px; }
+
+#stats {
+  width:800px;
+  overflow:hidden;
+  height:140px;
+}
+
+#alt {
+  height: 80px;
+}
+
+#speed, #heartbeat {
+  display:inline;
+  margin:0 20px 0 0;
+  color: #000;
+  font-size:24px;
+  line-height:30px;
+  font-weight:300;
+}
+
+span.label {
+  color: #777;
+  font-size:16px;
+  }
+
+#heartbeat {
+  top: 200px;
+}
+
+path {
+  fill: #FC4C02;
+  stroke: white;
+  stroke-width: 3px;
+}
+
+#altext {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  color: white;
+}
+
+#my-slider {
+  position: absolute;
+  top: 620px;
+  left: 10px;
+  width: 800px;
+  visibility: hidden;
+}
+
