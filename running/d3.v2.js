@@ -2705,10 +2705,10 @@
     return [ a, c ];
   };
   d3.random = {
-    normal: function(Âµ, Ïƒ) {
+    normal: function(µ, σ) {
       var n = arguments.length;
-      if (n < 2) Ïƒ = 1;
-      if (n < 1) Âµ = 0;
+      if (n < 2) σ = 1;
+      if (n < 1) µ = 0;
       return function() {
         var x, y, r;
         do {
@@ -2716,16 +2716,16 @@
           y = Math.random() * 2 - 1;
           r = x * x + y * y;
         } while (!r || r > 1);
-        return Âµ + Ïƒ * x * Math.sqrt(-2 * Math.log(r) / r);
+        return µ + σ * x * Math.sqrt(-2 * Math.log(r) / r);
       };
     },
-    logNormal: function(Âµ, Ïƒ) {
+    logNormal: function(µ, σ) {
       var n = arguments.length;
-      if (n < 2) Ïƒ = 1;
-      if (n < 1) Âµ = 0;
+      if (n < 2) σ = 1;
+      if (n < 1) µ = 0;
       var random = d3.random.normal();
       return function() {
-        return Math.exp(Âµ + Ïƒ * random());
+        return Math.exp(µ + σ * random());
       };
     },
     irwinHall: function(m) {
@@ -3077,7 +3077,7 @@
       return d3.round(x, p = d3_format_precision(x, p)).toFixed(Math.max(0, Math.min(20, p)));
     }
   });
-  var d3_formatPrefixes = [ "y", "z", "a", "f", "p", "n", "Î¼", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ].map(d3_formatPrefix);
+  var d3_formatPrefixes = [ "y", "z", "a", "f", "p", "n", "μ", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" ].map(d3_formatPrefix);
   d3.formatPrefix = function(value, precision) {
     var i = 0;
     if (value) {
