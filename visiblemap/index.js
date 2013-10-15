@@ -8,7 +8,7 @@ function resolveCode(key) {
 var MM = com.modestmaps;
 $(function() {
     wax.tilejson(
-        'https://a.tiles.mapbox.com/v1/mapbox.geography-class.jsonp',
+        'https://a.tiles.mapbox.com/v1/mapbox.geography-class.jsonp?secure=true',
         function(tilejson) {
         var map = new MM.Map('map', new wax.mm.connector(tilejson));
         map.setCenterZoom(new MM.Location(0, 0), 1);
